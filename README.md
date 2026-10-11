@@ -1,8 +1,14 @@
 # RepReady
 
-A responsive Next.js exercise reference with 873 movement guides. Chest, back, legs, shoulders, arms, and core each have more than 50 relevant exercises, with primary-target entries shown first. Users can filter by sub-muscle or movement focus, equipment, difficulty, training type, and primary/supporting muscle role.
+A responsive Next.js exercise reference with 873 movement guides. Chest, back, legs, shoulders, arms, and core each have a sample workout and more than 50 relevant exercises. Users can filter the library by sub-muscle or movement focus, equipment, difficulty, training type, and primary/supporting muscle role.
 
 Each exercise opens into a read-only guide with start-and-finish images, primary and secondary muscles, equipment, difficulty, movement type, and complete step-by-step instructions. There are no completion markers, workout streaks, accounts, or saved progress.
+
+## Workouts and ratings
+
+Choosing a body part shows an ordered sample session with sets, reps, rest times, and links to each form guide. The chest session includes upper, middle, and lower pec emphasis. Plans are defined in `app/workout-plans.ts` and are general examples, not personalized prescriptions.
+
+Every exercise in the selected library receives a 1–5 star training-fit score for that body part. Plan picks receive their curated score; other movements are scored from primary versus supporting muscle role, movement type, difficulty, and guide detail. Results appear from highest to lowest score. Ties favor plan picks, then primary-target exercises. These are editorial scores, **not user reviews**.
 
 ## Run locally
 

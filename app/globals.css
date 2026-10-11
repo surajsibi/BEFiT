@@ -614,6 +614,226 @@ h1 em,
   content: "";
 }
 
+.workout-section {
+  padding: clamp(75px, 8vw, 120px) clamp(20px, 5vw, 76px);
+  background: var(--cream);
+}
+
+.workout-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 40px;
+}
+
+.workout-heading h2 {
+  max-width: 850px;
+  margin: 0;
+  font-size: clamp(48px, 6.2vw, 86px);
+  line-height: 0.9;
+  text-wrap: balance;
+}
+
+.workout-heading > div:first-child > p:last-child {
+  max-width: 720px;
+  margin: 25px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.workout-summary {
+  display: flex;
+  gap: 6px;
+}
+
+.workout-summary span {
+  min-width: 90px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border: 1px solid var(--ink);
+  border-radius: 12px;
+  background: var(--accent);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.workout-summary b {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.plan-intro {
+  margin: 36px 0 14px;
+  padding: 18px 21px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid var(--ink);
+  border-radius: 14px;
+  background: var(--accent);
+}
+
+.plan-intro p {
+  max-width: 730px;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.plan-intro span {
+  max-width: 260px;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.plan-list {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  list-style: none;
+}
+
+.plan-item {
+  min-width: 0;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 49px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid var(--ink);
+  border-radius: 17px;
+  background: white;
+}
+
+.plan-number {
+  align-self: start;
+  color: var(--accent);
+  font-family: "Arial Black", Impact, sans-serif;
+  font-size: 35px;
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  line-height: 1;
+  -webkit-text-stroke: 1px var(--ink);
+}
+
+.plan-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.plan-focus {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.plan-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.plan-rating > span {
+  color: #b76000;
+  font-size: 17px;
+  letter-spacing: 0.02em;
+}
+
+.plan-rating small {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.plan-main h3 {
+  margin: 8px 0 5px;
+  font-size: clamp(21px, 2.6vw, 32px);
+  line-height: 1.1;
+}
+
+.plan-main > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.plan-prescription {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.plan-prescription span {
+  padding: 7px 9px;
+  border-radius: 7px;
+  background: var(--paper);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.plan-prescription span:first-child {
+  background: var(--accent);
+}
+
+.plan-guide {
+  padding: 11px 13px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--ink);
+  color: white;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.plan-guide span {
+  margin-left: 5px;
+  color: var(--accent);
+  font-size: 13px;
+}
+
+.plan-guide:hover {
+  background: var(--accent);
+  color: var(--ink);
+}
+
+.plan-guide:hover span {
+  color: var(--ink);
+}
+
+.plan-footnote {
+  max-width: 900px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.plan-footnote a {
+  color: var(--ink);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .library {
   background: var(--paper-deep);
 }
@@ -820,6 +1040,13 @@ h1 em,
   font-size: 13px;
 }
 
+.rating-explanation {
+  margin: -6px 0 17px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
 .exercise-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -875,8 +1102,31 @@ h1 em,
   color: var(--ink);
 }
 
+.training-fit {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.training-fit > span {
+  color: #b76000;
+  font-size: 19px;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.training-fit small {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .card-body h3 {
-  margin: 17px 0 8px;
+  margin: 12px 0 8px;
   font-size: clamp(21px, 2vw, 29px);
   line-height: 0.98;
   overflow-wrap: anywhere;
@@ -1544,6 +1794,11 @@ footer > a:last-child {
     max-width: 700px;
   }
 
+  .workout-heading {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
   .select-filters {
     grid-template-columns: 1fr 1fr;
   }
@@ -1565,6 +1820,22 @@ footer > a:last-child {
 
   .group-button {
     min-height: 145px;
+  }
+
+  .plan-intro {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .plan-item {
+    grid-template-columns: 39px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .plan-guide {
+    grid-column: 2;
+    justify-self: start;
   }
 
   .anatomy-note {
@@ -1712,8 +1983,36 @@ footer > a:last-child {
   }
 
   .group-section,
-  .library {
+  .library,
+  .workout-section {
     padding: 78px 16px;
+  }
+
+  .workout-heading h2 {
+    font-size: clamp(45px, 13vw, 65px);
+  }
+
+  .workout-summary {
+    width: 100%;
+  }
+
+  .workout-summary span {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .plan-item {
+    padding: 16px;
+  }
+
+  .plan-item-top {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .plan-number {
+    font-size: 28px;
   }
 
   .section-heading,
@@ -1902,7 +2201,7 @@ footer > a:last-child {
     min-height: 60px;
     padding: 6px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 17px;
     background: rgba(23, 25, 22, 0.96);

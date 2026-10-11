@@ -18,8 +18,10 @@ import {
   type BodyPart,
   type Exercise,
 } from "./exercise-data";
+import { trainingFitFor, workoutPlans } from "./workout-plans";
 
 const PAGE_SIZE = 24;
+const exerciseById = new Map(exercises.map((exercise) => [exercise.id, exercise]));
 
 type ExerciseVisualProps = {
   exercise: Exercise;
@@ -67,16 +69,26 @@ function ExerciseVisual({ exercise, priority = false, mode = "card" }: ExerciseV
   );
 }
 
+function TrainingFit({ rating }: { rating: 1 | 2 | 3 | 4 | 5 }) {
+  return (
+    <span className="training-fit" aria-label={`${rating} out of 5 training fit stars`}>
+      <span aria-hidden="true">{"★".repeat(rating)}{"☆".repeat(5 - rating)}</span>
+      <small>{rating}/5 training fit</small>
+    </span>
+  );
+}
+
 function ExerciseCard({ exercise, bodyPart, onOpen }: { exercise: Exercise; bodyPart: BodyPart; onOpen: (exercise: Exercise, trigger: HTMLButtonElement) => void }) {
   const isPrimary = exercise.primaryBodyParts.includes(bodyPart);
   const focus = exercise.focus[bodyPart] ?? [];
+  const rating = trainingFitFor(exercise, bodyPart);
 
   return (
     <button
       className="exercise-card"
       type="button"
       onClick={(event) => onOpen(exercise, event.currentTarget)}
-      aria-label={`Open the ${exercise.name} form guide`}
+      aria-label={`Open the ${exercise.name} form guide, ${rating} out of 5 training fit stars`}
     >
       <ExerciseVisual exercise={exercise} />
       <div className="card-body">
@@ -84,6 +96,7 @@ function ExerciseCard({ exercise, bodyPart, onOpen }: { exercise: Exercise; body
           <span className={isPrimary ? "target-badge primary" : "target-badge"}>{isPrimary ? "Primary target" : "Supporting target"}</span>
           <span>{label(exercise.level)}</span>
         </div>
+        <TrainingFit rating={rating} />
         <h3>{exercise.name}</h3>
         <p className="card-muscles">{exercise.primaryMuscles.map(label).join(" · ")}</p>
         <div className="focus-tags">
@@ -114,6 +127,8 @@ export default function Home() {
   const selectedExercise = exercises.find((exercise) => exercise.id === selectedId) ?? null;
   const cleanedQuery = query.trim().toLowerCase();
   const groupInfo = bodyPartInfo[activeBodyPart];
+  const workoutPlan = workoutPlans[activeBodyPart];
+  const planSets = workoutPlan.exercises.reduce((total, item) => total + item.sets, 0);
   const focusOptions = focusOptionsFor(activeBodyPart);
 
   const baseResults = useMemo(() => {
@@ -134,11 +149,20 @@ export default function Home() {
     return baseResults
       .filter((exercise) => activeFocus === "All" || exercise.focus[activeBodyPart]?.includes(activeFocus))
       .sort((first, second) => {
+        const ratingDifference = trainingFitFor(second, activeBodyPart) - trainingFitFor(first, activeBodyPart);
+        if (ratingDifference !== 0) return ratingDifference;
+        const firstPlanIndex = workoutPlan.exercises.findIndex((item) => item.id === first.id);
+        const secondPlanIndex = workoutPlan.exercises.findIndex((item) => item.id === second.id);
+        if (firstPlanIndex !== -1 || secondPlanIndex !== -1) {
+          if (firstPlanIndex === -1) return 1;
+          if (secondPlanIndex === -1) return -1;
+          return firstPlanIndex - secondPlanIndex;
+        }
         const primaryDifference = Number(second.primaryBodyParts.includes(activeBodyPart)) - Number(first.primaryBodyParts.includes(activeBodyPart));
         if (primaryDifference !== 0) return primaryDifference;
         return first.name.localeCompare(second.name);
       });
-  }, [activeBodyPart, activeFocus, baseResults]);
+  }, [activeBodyPart, activeFocus, baseResults, workoutPlan]);
 
   const visibleExercises = filteredExercises.slice(0, visibleCount);
   const filtersActive = Boolean(cleanedQuery || equipment !== "all" || level !== "all" || category !== "all" || targetMode !== "all" || activeFocus !== "All");
@@ -165,7 +189,7 @@ export default function Home() {
     setQuery("");
     setVisibleCount(PAGE_SIZE);
     window.requestAnimationFrame(() => {
-      document.getElementById("exercise-library")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("workout-plan")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   };
 
@@ -193,6 +217,7 @@ export default function Home() {
         </a>
         <nav className="desktop-nav" aria-label="Main navigation">
           <a href="#muscle-groups">Body parts</a>
+          <a href="#workout-plan">Workout plan</a>
           <a href="#exercise-library">Exercise library</a>
           <a href="#safety">Form safety</a>
         </nav>
@@ -204,7 +229,7 @@ export default function Home() {
           <p className="eyebrow"><span /> Exercise reference library</p>
           <h1>One body part.<br /><em>Many ways to train it.</em></h1>
           <p className="hero-description">
-            Pick chest, back, legs, shoulders, arms or core. Then narrow hundreds of exercises by sub-muscle, equipment and level—and open any movement for its start position, finish position and full instructions.
+            Pick chest, back, legs, shoulders, arms or core for a complete workout plan. Then explore hundreds of exercises by sub-muscle, equipment and level, with form guides for every move.
           </p>
           <div className="hero-actions">
             <a className="primary-button" href="#muscle-groups">Choose a body part <span aria-hidden="true">→</span></a>
@@ -234,7 +259,7 @@ export default function Home() {
             <p className="eyebrow dark"><span /> Pick your first area</p>
             <h2>What are you training?</h2>
           </div>
-          <p>You can train two body parts in one session—browse one library, then switch to the second. Nothing here marks exercises complete.</p>
+          <p>Choose an area to see its full workout and exercise library. Switch areas whenever you want another plan.</p>
         </div>
 
         <div className="group-picker" aria-label="Choose a body part">
@@ -252,6 +277,58 @@ export default function Home() {
             </button>
           ))}
         </div>
+      </section>
+
+      <section className={`workout-section accent-${groupInfo.accent}`} id="workout-plan" aria-labelledby="workout-title">
+        <div className="workout-heading">
+          <div>
+            <p className="eyebrow dark"><span /> Ready-to-use session</p>
+            <h2 id="workout-title">Full {activeBodyPart.toLowerCase()} workout</h2>
+            <p>{workoutPlan.summary}</p>
+          </div>
+          <div className="workout-summary" aria-label="Workout at a glance">
+            <span><b>{workoutPlan.exercises.length}</b> exercises</span>
+            <span><b>{planSets}</b> working sets</span>
+            <span><b>1</b> session</span>
+          </div>
+        </div>
+
+        <div className="plan-intro">
+          <p>Do these in order. Warm up first, then choose a weight you can control for every rep. If you are new to lifting, start with fewer sets and build up gradually.</p>
+          <span>Stars = how well each exercise fits this plan, not user reviews.</span>
+        </div>
+
+        <ol className="plan-list">
+          {workoutPlan.exercises.map((item, index) => {
+            const exercise = exerciseById.get(item.id);
+            if (!exercise) return null;
+            return (
+              <li className="plan-item" key={item.id}>
+                <span className="plan-number">{String(index + 1).padStart(2, "0")}</span>
+                <div className="plan-main">
+                  <div className="plan-item-top">
+                    <span className="plan-focus">{item.focus}</span>
+                    <span className="plan-rating" aria-label={`${item.rating} out of 5 plan fit stars`}>
+                      <span aria-hidden="true">{"★".repeat(item.rating)}{"☆".repeat(5 - item.rating)}</span>
+                      <small>{item.rating}/5 plan fit</small>
+                    </span>
+                  </div>
+                  <h3>{exercise.name}</h3>
+                  <p>{item.why}</p>
+                  <div className="plan-prescription">
+                    <span><b>{item.sets} sets</b> × {item.reps}</span>
+                    <span>Rest {item.rest}</span>
+                    <span>{label(exercise.equipment)}</span>
+                  </div>
+                </div>
+                <button className="plan-guide" type="button" onClick={(event) => openExercise(exercise, event.currentTarget)} aria-label={`View form guide for ${exercise.name}`}>
+                  View form <span aria-hidden="true">↗</span>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+        <p className="plan-footnote">This is a sample workout for healthy adults. Allow recovery before training the same area hard again, and adjust movements to your ability and equipment. <a href="https://acsm.org/resistance-training-guidelines-update-2026/" target="_blank" rel="noreferrer">ACSM training guidance ↗</a></p>
       </section>
 
       <section className="library" id="exercise-library">
@@ -349,8 +426,9 @@ export default function Home() {
 
         <div className="results-bar" aria-live="polite">
           <p><strong>{filteredExercises.length}</strong> {filteredExercises.length === 1 ? "exercise" : "exercises"} found</p>
-          <span>Showing {Math.min(visibleCount, filteredExercises.length)} now</span>
+          <span>Highest rated first · Showing {Math.min(visibleCount, filteredExercises.length)} now</span>
         </div>
+        <p className="rating-explanation">Training fit is an editorial score based on plan selection, primary muscle role, movement type, level, and guide detail. Stars are not user reviews.</p>
 
         {visibleExercises.length > 0 ? (
           <>
@@ -405,6 +483,7 @@ export default function Home() {
 
       <nav className="mobile-nav" aria-label="Mobile navigation">
         <a href="#muscle-groups"><span aria-hidden="true">◎</span>Body parts</a>
+        <a href="#workout-plan"><span aria-hidden="true">★</span>Plan</a>
         <a href="#exercise-library"><span aria-hidden="true">⌕</span>Exercises</a>
         <a href="#safety"><span aria-hidden="true">!</span>Safety</a>
       </nav>
@@ -428,6 +507,7 @@ export default function Home() {
               <div className="modal-title-row">
                 <div>
                   <p>{label(selectedExercise.category)} · {label(selectedExercise.level)}</p>
+                  <TrainingFit rating={trainingFitFor(selectedExercise, activeBodyPart)} />
                   <h2 id="exercise-title">{selectedExercise.name}</h2>
                 </div>
                 <div className="modal-focus-list">
