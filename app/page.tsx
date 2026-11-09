@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import AppDownload from "./app-download";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   bodyPartCounts,
@@ -221,7 +222,7 @@ export default function Home() {
           <a href="#exercise-library">Exercise library</a>
           <a href="#safety">Form safety</a>
         </nav>
-        <a className="header-action" href="#exercise-library">Browse {totalSourceExercises} guides <span aria-hidden="true">↘</span></a>
+        <a className="header-action" href="#download-app">Get Android app <span aria-hidden="true">&#8595;</span></a>
       </header>
 
       <section className="hero">
@@ -233,7 +234,7 @@ export default function Home() {
           </p>
           <div className="hero-actions">
             <a className="primary-button" href="#muscle-groups">Choose a body part <span aria-hidden="true">→</span></a>
-            <a className="text-link" href="#exercise-library">Explore chest</a>
+            <a className="text-link" href="#download-app">Get the Android app</a>
           </div>
           <div className="hero-stats" aria-label="Library summary">
             <span><b>{totalSourceExercises}</b> exercise guides</span>
@@ -252,6 +253,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <AppDownload />
 
       <section className="group-section" id="muscle-groups">
         <div className="section-heading">
@@ -485,7 +488,7 @@ export default function Home() {
         <a href="#muscle-groups"><span aria-hidden="true">◎</span>Body parts</a>
         <a href="#workout-plan"><span aria-hidden="true">★</span>Plan</a>
         <a href="#exercise-library"><span aria-hidden="true">⌕</span>Exercises</a>
-        <a href="#safety"><span aria-hidden="true">!</span>Safety</a>
+        <a href="#download-app"><span aria-hidden="true">&#8595;</span>Get app</a>
       </nav>
 
       {selectedExercise && (

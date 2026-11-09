@@ -40,3 +40,49 @@ The app is a read-only reference and does not require a database, sign-in, or en
 The local catalog is sourced from [Free Exercise DB](https://github.com/yuhonas/free-exercise-db) at commit `b0eed061e1c832b3ed815fbaa4b45b3cdc14df49`. The repository labels the dataset public domain under the Unlicense. Catalog JSON is bundled locally; start/end images are loaded from jsDelivr using that pinned commit.
 
 Because the images are hosted externally, visitors need an internet connection to see them. The interface provides an image-unavailable fallback if the CDN cannot be reached.
+
+
+## beefit Android download
+
+The home page includes a beefit download section, linked from the header,
+hero and mobile navigation. It shows "Android download coming soon" until a
+real APK or a hosted download URL is supplied. The website and Android app
+remain separate: the APK installs the workout-tracking app.
+
+Build the renamed app from the GymMane Flutter project after setting up Flutter
+and the Android SDK:
+
+```powershell
+cd "C:\Users\Suraj\Desktop\New folder\GymMane"
+flutter pub get
+flutter build apk --release
+```
+
+The result is `build/app/outputs/flutter-apk/app-release.apk`.
+
+Choose one way to publish that APK:
+
+- **With the website:** copy the APK to `public/downloads/beefit.apk` in this
+  website project, then rebuild and redeploy. The home page detects it at build
+  time and enables the download. Include the APK in the deployment's source.
+- **With a file host:** upload the renamed app's APK to a release or file host,
+  then set `NEXT_PUBLIC_BEEFIT_APK_URL` to its full HTTPS file-download URL in
+  Netlify's environment variables (or `.env.local` for local development).
+  Rebuild and redeploy after changing the URL. This option avoids storing a
+  large binary in the website repository.
+
+The website address is https://befittt.netlify.app. With the first option, the
+APK address after deployment will be https://befittt.netlify.app/downloads/beefit.apk.
+That link is not available until the real file is included in a deployment.
+
+Use an APK built from the renamed source; the original upstream GymMane release
+still has the original name. Keep the same signing key for future app updates.
+For public releases, configure release signing in the Flutter project before
+building; its current fallback uses the debug signing key.
+
+On an Android phone, open the website, select **Get Android app**, download the
+APK and open it. If Android asks, allow the browser or Files app to install it,
+then tap **Install**. Android 7.0 or newer is required; this APK is not for iPhone.
+
+References: [Flutter Android builds](https://docs.flutter.dev/deployment/android)
+and [Next.js static files](https://nextjs.org/docs/app/api-reference/file-conventions/public-folder).
