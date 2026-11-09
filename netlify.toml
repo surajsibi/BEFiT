@@ -5,3 +5,5 @@
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
+
+  NEXT_PUBLIC_BEEFIT_APK_URL = "https://github.com/surajsibi/GymGuide/releases/download/beefit-v2.1.0/beefit.apk"

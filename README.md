@@ -86,3 +86,7 @@ then tap **Install**. Android 7.0 or newer is required; this APK is not for iPho
 
 References: [Flutter Android builds](https://docs.flutter.dev/deployment/android)
 and [Next.js static files](https://nextjs.org/docs/app/api-reference/file-conventions/public-folder).
+
+The Netlify configuration selects the signed beefit 2.1.0 APK hosted in this project's
+[GitHub release](https://github.com/surajsibi/GymGuide/releases/tag/beefit-v2.1.0).
+The release must be published before deploying this download configuration.
